@@ -1,1 +1,1 @@
-There is no resource folder for the data files. If you do want to use this code, for whatever reason, please create a resources folder and use the following format to name the data folders DayX.data.txt
+There is no resource folder for the data files. If you do want to use this code, for whatever reason, please create a resources folder and use the following format to name the data files given by AOC DayX.data.txt
