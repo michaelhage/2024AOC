@@ -1,4 +1,4 @@
-package hagem.aoc.day1;
+package hagem.aoc2024.day1;
 
 import java.io.*;
 import java.util.*;
