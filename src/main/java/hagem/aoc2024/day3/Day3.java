@@ -17,10 +17,10 @@ public class Day3 {
     public String run() {
 
 //        PART 1
-//        Pattern pattern = Pattern.compile("mul\\([0-9]+,[0-9]+\\)");
+//        Pattern pattern = Pattern.compile("mul\\(\\d+,\\d+\\)");
 
 //        PART 2
-        Pattern pattern = Pattern.compile("(mul\\([0-9]+,[0-9]+\\)|(do\\(\\)|don't\\(\\)))");
+        Pattern pattern = Pattern.compile("(mul\\(\\d+,\\d+\\)|(do\\(\\)|don't\\(\\)))");
 
         long total = 0;
         boolean enabler = true;
