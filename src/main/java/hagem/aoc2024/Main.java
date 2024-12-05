@@ -1,6 +1,5 @@
 package hagem.aoc2024;
 
-import hagem.aoc2024.day3.Day3;
 import hagem.aoc2024.day4.Day4;
 
 public class Main {
