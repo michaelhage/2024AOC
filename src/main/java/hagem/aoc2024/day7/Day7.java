@@ -1,7 +1,5 @@
 package hagem.aoc2024.day7;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,7 +11,7 @@ import java.util.Objects;
 
 public class Day7 {
 
-    class Equation {
+    static class Equation {
 
         private final long value;
         private final long[] arr;
@@ -79,147 +77,51 @@ public class Day7 {
         for(Equation eq: equationList) {
 
 //            evaluate part 1
-            long val = evaluateEquationP1(eq);
+            int val = evaluateEquation(eq, 1, eq.getArr()[0]);
 
-            answerP1 += val;
-            answerP2 += val;
-
-//            if value is 0, then compute part 2
-            if(val == 0) {
-
-//                evaluate part 2
-                answerP2 += evaluateEquationP2(eq);
+            if(val == 1) {
+                answerP1 += eq.getValue();
+                answerP2 += eq.getValue();
+            } else if(val == 2) {
+                answerP2 += eq.getValue();
             }
         }
 
         return "Part 1: " + answerP1 + ", Part 2: " + answerP2;
     }
 
-    private long evaluateEquationP1(Equation eq) {
+    private int evaluateEquation(Equation eq, int i, long val) {
 
-//        get the values to make it look nicer
-        long value = eq.getValue();
-        long[] arr = eq.getArr();
+//        check
+        if(eq.getArr().length == i) {
 
-//        compute the max number of combinations
-//        2 ^ (arr.length)
-        double MAXVALUE =  Math.pow( 2.0d, (arr.length) * 1.0d );
-        int x = 0;
-
-//        iterate over all combinationss of the equation operators
-        while( x++ < MAXVALUE){
-
-//            set the comparison value to the first value
-            long cmp = arr[0];
-
-//            binary string will have the operation order
-            String binaryString = StringUtils.leftPad(Integer.toBinaryString(x), arr.length, '0');
-
-            for(int i = 1; i < arr.length; i++) {
-
-//                get the character
-                char c = binaryString.charAt(i-1);
-
-//                if c == 1, then add
-                if(c == '1') {
-                    cmp += arr[i];
-//                otherwise, multiply
-                } else {
-                    cmp *= arr[i];
-                }
-
+            if(val == eq.getValue()) {
+                return 1;
             }
-
-//            compare against target value
-            if(cmp == value) {
-                return value;
-            }
-
+            return 0;
         }
 
-//        return 0 if there is no valid equation combinations
-        return 0;
-    }
+//        addition
+        int ret = evaluateEquation(eq, i+1, val + eq.getArr()[i]);
 
-    private long evaluateEquationP2(Equation eq) {
-
-//        get the values to make it look nicer
-        long value = eq.getValue();
-        long[] arr = eq.getArr();
-
-//        compute the max number of combinations
-//        3 ^ (arr.length)
-        double MAXVALUE =  Math.pow( 3.0d, arr.length * 1.0d );
-        int x = 0;
-
-//        array of operator combinations
-        int[] operators = new int[arr.length - 1];
-
-        while( x++ < MAXVALUE){
-
-//            set the comparison value as the first value
-            long cmp = arr[0];
-
-//            iterate over the array
-            for(int i = 1; i < arr.length; i++) {
-
-//                get the operator
-                switch(operators[i-1]) {
-
-//                    if value is equal to 0, then concat
-                    case 0:
-                        cmp = Long.parseLong( "" + cmp + arr[i]);
-                        break;
-
-//                    if value is equal to 1, then multiply
-                    case 1:
-                        cmp *= arr[i];
-                        break;
-
-//                    if value is equal to 2, then add
-                    case 2:
-                        cmp += arr[i];
-                        break;
-
-                }
-
-            }
-
-//            if comparison value is equal to target, then return value
-            if(cmp == value) {
-                return value;
-            }
-
-//            set the operator iterator value to 0
-            int y = 0;
-
-//            increment the operator value
-            operators[y]++;
-
-//            if the value of the operator value at value y is equal to 3,
-//            then enter to reset and increment the other values
-            while(operators[y]==3) {
-
-//                set the operator value to 0,
-//                cause there is no check for values 3 and above
-//                then increment the y value
-                operators[y++] = 0;
-
-//                if y exceeds the array length, then break the loop
-                if(y >= operators.length) {
-                    break;
-                }
-
-//                increment the value after the increment has occurred
-                operators[y]++;
-
-            }
-
+        if(ret > 0) {
+            return ret;
         }
 
-//        return 0 if no match has been found
+//        multiply
+        ret = evaluateEquation(eq, i+1, val * eq.getArr()[i]);
+
+        if(ret > 0) {
+            return ret;
+        }
+
+//        concat
+        ret = evaluateEquation(eq, i+1, Long.parseLong( "" + val + eq.getArr()[i]) );
+
+        if(ret > 0) {
+            return 2;
+        }
+
         return 0;
     }
-
-
 }

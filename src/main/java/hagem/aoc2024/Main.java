@@ -26,6 +26,7 @@ public class Main {
 //        System.out.println(new Day6().run());
 
 //        Day 7
+//        System.out.println(new Day7Old().run());
         System.out.println(new Day7().run());
 
         long endTime = System.nanoTime();
