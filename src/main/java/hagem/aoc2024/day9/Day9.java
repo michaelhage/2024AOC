@@ -1,11 +1,8 @@
 package hagem.aoc2024.day9;
 
 import hagem.utils.Reader;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 
 import java.io.File;
-import java.sql.Array;
 import java.util.*;
 
 public class Day9 {
