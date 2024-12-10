@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Reader {
 
-    public List<String> readFile(File file) {
+    public static List<String> readFile(File file) {
 
         List<String> ret = new ArrayList<>();
 
