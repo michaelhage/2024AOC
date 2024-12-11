@@ -1,7 +1,6 @@
 package hagem.aoc2024;
 
-import hagem.aoc2024.day9.Day10;
-import hagem.aoc2024.day9.Day9;
+import hagem.aoc2024.day10.Day10;
 
 public class Main {
     public static void main(String[] args) {

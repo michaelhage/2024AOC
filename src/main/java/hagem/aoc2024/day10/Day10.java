@@ -1,4 +1,4 @@
-package hagem.aoc2024.day9;
+package hagem.aoc2024.day10;
 
 import hagem.utils.Reader;
 
