@@ -7,17 +7,6 @@ import java.util.*;
 
 public class Day11 {
 
-    class Blink {
-
-        final int blink;
-        final long value;
-
-        public Blink(int blink, long value) {
-            this.blink = blink;
-            this.value = value;
-        }
-    }
-
     File file = new File(Objects.requireNonNull(getClass().getResource("/Day11.data.txt")).getFile());
 
     public String runTest(int blinks) {
@@ -104,6 +93,16 @@ public class Day11 {
     }
 
 //    SOLUTION TO PART 1, MY PRINCE, WISH YOU WERE MORE SPACE EFFICIENT
+//  class Blink {
+//
+//    final int blink;
+//    final long value;
+//
+//    public Blink(int blink, long value) {
+//        this.blink = blink;
+//        this.value = value;
+//    }
+//}
 //
 //    HashMap<Blink, Integer> blinkIntegerHashMap = new HashMap<>();
 //    private int evaluate(String s, int count, int blinks) {
