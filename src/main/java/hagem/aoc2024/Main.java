@@ -1,6 +1,6 @@
 package hagem.aoc2024;
 
-import hagem.aoc2024.day10.Day10;
+import hagem.aoc2024.day11.Day11;
 
 public class Main {
     public static void main(String[] args) {
@@ -36,7 +36,10 @@ public class Main {
 //        System.out.println(new Day9().run());
 
 //        Day 10
-        System.out.println(new Day10().run());
+//        System.out.println(new Day10().run());
+
+//        Day 11
+        new Day11().run();
 
         long endTime = System.nanoTime();
 
