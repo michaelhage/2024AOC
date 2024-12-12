@@ -17,9 +17,7 @@ public class Day11 {
 
         HashMap<Long, Long> longIntegerHashMap = initMap(dataArr);
 
-        long answerP1 = 0L;
-
-        answerP1 = evaluate(longIntegerHashMap, blinks);
+        long answerP1 = evaluate(longIntegerHashMap, blinks);
 
         System.out.println(answerP1);
         return "" + answerP1;

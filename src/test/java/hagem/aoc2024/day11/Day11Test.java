@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class Day11Test {
