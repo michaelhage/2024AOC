@@ -43,5 +43,5 @@ build/
 
 #remove data files
 /src/main/resources/Day*
-/src/test/resources/Day*
+/src/test/resources/*/Day*
 /.idea/material_theme_project_new.xml
