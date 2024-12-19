@@ -4,14 +4,11 @@ import hagem.utils.Reader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class Day17 {
 
-    class Program {
+    static class Program {
 
         long a;
         long b;
@@ -21,7 +18,7 @@ public class Day17 {
 
         private int instructionPointer;
 
-        private List<Integer> output;
+        private final List<Integer> output;
 
         public Program(long a, long b, long c, List<Integer> instructionList) {
 
@@ -196,16 +193,12 @@ public class Day17 {
         return new Program(a, b, c, instructionList);
     }
 
-    private HashMap<Program, List<Integer>> evaluatedMap = new HashMap<>();
-
     public String run() {
 
         Program program = parseData(Reader.readFile(file));
 
-        program.evaluateProgramP1();;
+        program.evaluateProgramP1();
         String answerP1 = program.getOutput();
-
-        evaluatedMap.put( program, program.output);
 
         long answerP2 = findProgramOutput(program);
 
@@ -252,10 +245,8 @@ public class Day17 {
 
     private long findProgramOutput(Program originalProgram) {
 
-        File outputFile = Paths.get(file.getParent(), "Day17.output.txt").toFile();
-
         List<Long> evaluateList = new ArrayList<>();
-        List<Long> nextList = new ArrayList<>();
+        List<Long> nextList;
 
         evaluateList.add(0L);
 
