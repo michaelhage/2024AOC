@@ -278,9 +278,9 @@ public class Day17 {
 
                         nextList.add(value + i);
 
-//                        System.out.println("Value: " + (value + i) +
-//                                ",\t Binary: " + String.format("%10s", Long.toBinaryString(value + i)).replace(' ', '0') +
-//                                ",\t Output: " + program.getOutput());
+                        System.out.println("Value: " + (value + i) +
+                                ",\t Binary: " + String.format("%10s", Long.toBinaryString(value + i)).replace(' ', '0') +
+                                ",\t Output: " + program.getOutput());
 
                     }
 
