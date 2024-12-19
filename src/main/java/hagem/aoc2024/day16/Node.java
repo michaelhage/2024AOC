@@ -1,6 +1,8 @@
 package hagem.aoc2024.day16;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Node {
 
@@ -15,6 +17,9 @@ public class Node {
     Node east;
     Node west;
 
+    Set<Node> prevNodes;
+    Set<Node> prevNodesOrig;
+
     public Node(int x, int y) {
         this.x = x;
         this.y = y;
@@ -25,6 +30,9 @@ public class Node {
         this.south = null;
         this.east = null;
         this.west = null;
+
+        prevNodes = new HashSet<>();
+        prevNodesOrig = new HashSet<>();
     }
 
     public void setNodeDirection(Direction dir, Node node) {
@@ -62,11 +70,29 @@ public class Node {
         return null;
     }
 
-    public boolean updateScore(long score) {
+    public boolean updateScore(long score, Node node) {
+
+        if(score == Long.MAX_VALUE) {
+            this.score = score;
+            prevNodes = new HashSet<>();
+            return false;
+        }
 
         if(this.score > score) {
             this.score = score;
+
+            if(node == null) return true;
+
+            prevNodes = new HashSet<>();
+            prevNodes.add(node);
+
             return true;
+        } else if(this.score == score) {
+
+            if(node == null) return false;
+
+            prevNodes.add(node);
+
         }
 
         return false;

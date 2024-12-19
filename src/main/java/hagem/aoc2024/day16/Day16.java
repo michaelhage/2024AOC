@@ -11,6 +11,7 @@ public class Day16 {
     private final char WALL = '#';
     private final char START = 'S';
     private final char END = 'E';
+    private final char MARK = 'O';
 
     Node startNode = null;
     Node endNode = null;
@@ -18,13 +19,23 @@ public class Day16 {
 
     public String run() {
 
-        List<char[]> data = Reader.readFile(file).stream().map(String::toCharArray).toList();
+        List<char[]> mazeMap = Reader.readFile(file).stream().map(String::toCharArray).toList();
 
-        List<Node> nodeList = parseData(data);
+        List<Node> nodeList = parseData(mazeMap);
 
         djikstra();
 
-        return "" + endNode.getScore();
+        long answerP1 = endNode.getScore();
+
+        LinkedHashSet<Node> pathSet = markPath(endNode, mazeMap);
+
+        resetScores(nodeList);
+
+        findSeats(answerP1, mazeMap, pathSet);
+
+        long answerP2 = countSeats(mazeMap);
+
+        return "Part 1: " + answerP1 + ", Part 2: " + answerP2;
     }
 
     private List<Node> parseData(List<char[]> data) {
@@ -81,6 +92,17 @@ public class Day16 {
 
     }
 
+    private void resetScores(List<Node> nodeList) {
+
+        for(Node node: nodeList) {
+
+            node.prevNodesOrig = node.prevNodes;
+            node.updateScore(Long.MAX_VALUE, null);
+
+        }
+
+    }
+
     private void djikstra() {
 
         List<Node> evaluateList = new ArrayList<>();
@@ -88,7 +110,7 @@ public class Day16 {
 
         evaluateList.add(startNode);
         startNode.dir = Direction.EAST;
-        startNode.updateScore(0);
+        startNode.updateScore(0, startNode);
 
         while(!evaluateList.isEmpty()) {
 
@@ -100,7 +122,7 @@ public class Day16 {
                     continue;
                 }
 
-                evaluateNode(node, visitedList);
+                evaluateNodeP1(node, visitedList);
 
             }
 
@@ -109,14 +131,14 @@ public class Day16 {
         }
     }
 
-    private void evaluateNode(Node node, List<Node> visitedList) {
+    private void evaluateNodeP1(Node node, List<Node> visitedList) {
 
         Node n;
 
 //        Go Forth, Onwards to Victory
         if( (n = node.getNode(node.dir )) != null ) {
 
-            if(n.updateScore( node.getScore() + 1 )) {
+            if(n.updateScore( node.getScore() + 1, node )) {
                 n.setDir(node.dir);
                 visitedList.add(n);
             }
@@ -125,7 +147,7 @@ public class Day16 {
 
 //        rotate Clockwise
         if( (n = node.getNode( node.dir.getClockwise() )) != null ) {
-            if(n.updateScore( node.getScore() + 1001 )) {
+            if(n.updateScore( node.getScore() + 1001, node )) {
                 n.setDir(node.dir.getClockwise());
                 visitedList.add(n);
             }
@@ -133,7 +155,7 @@ public class Day16 {
 
 //
         if( (n = node.getNode( node.dir.getCounterClockwise() ) ) != null ) {
-            if(n.updateScore( node.getScore() + 1001 )) {
+            if(n.updateScore( node.getScore() + 1001, node )) {
                 n.setDir(node.dir.getCounterClockwise());
                 visitedList.add(n);
             }
@@ -141,5 +163,124 @@ public class Day16 {
 
     }
 
+    private void findSeats(long targetScore, List<char[]> mazeMap, LinkedHashSet<Node> pathSet) {
+
+        List<Node> nextList = new ArrayList<>();
+
+        endNode.dir = endNode.dir.getOppositeDirection();
+        endNode.updateScore(0, endNode);
+
+        List<Node> evaluateList = new ArrayList<>();
+        evaluateList.add(endNode);
+
+        for(Node node: pathSet) {
+
+            evaluateNodeP2(node, targetScore, mazeMap);
+
+        }
+
+    }
+
+    private void evaluateNodeP2(Node node, long targetScore, List<char[]> mazeMap) {
+
+        Node n;
+
+        if(node.getScore() > targetScore && node.getScore() != Long.MAX_VALUE) {
+            return;
+        }
+
+        if(node.equals(startNode) && node.getScore() == targetScore) {
+
+            markPath(node, mazeMap);
+            startNode.updateScore(Long.MAX_VALUE, null);
+
+        }
+
+//        Go Forth, Onwards to Victory
+        if( (n = node.getNode(node.dir )) != null ) {
+
+            if(n.updateScore( node.getScore() + 1, node )) {
+                n.setDir(node.dir);
+
+                evaluateNodeP2(n, targetScore, mazeMap);
+
+            }
+
+        }
+
+//        rotate Clockwise
+        if( (n = node.getNode( node.dir.getClockwise() )) != null ) {
+
+            if(n.updateScore( node.getScore() + 1001, node )) {
+                n.setDir(node.dir.getClockwise());
+                evaluateNodeP2(n, targetScore, mazeMap);
+
+            }
+        }
+
+//
+        if( (n = node.getNode( node.dir.getCounterClockwise() ) ) != null ) {
+
+            if(n.updateScore( node.getScore() + 1001, node )) {
+
+                n.setDir(node.dir.getCounterClockwise());
+                evaluateNodeP2(n, targetScore, mazeMap);
+            }
+        }
+
+//        reset node at end
+//        node.updateScore(Long.MAX_VALUE, null);
+
+    }
+
+    private LinkedHashSet<Node> markPath(Node endNode, List<char[]> mazeMap) {
+
+        HashSet<Node> nodeSet = new HashSet<>();
+        LinkedHashSet<Node> pathSet = new LinkedHashSet<>();
+
+        nodeSet.add(endNode);
+
+        loop:
+        while(!nodeSet.isEmpty()) {
+
+            HashSet<Node> newNodes = new HashSet<>();
+
+            for(Node node: nodeSet) {
+
+                mazeMap.get(node.y)[node.x] = MARK;
+
+                if(node.equals(startNode)) {
+                    break loop;
+                }
+
+                newNodes.addAll(node.prevNodes);
+                pathSet.addAll(node.prevNodes);
+            }
+
+            nodeSet = newNodes;
+
+        }
+
+        return pathSet;
+
+    }
+
+    public long countSeats(List<char[]> mazeMap) {
+
+        long count = 0;
+
+        for(char[] chars: mazeMap) {
+            for (char c: chars) {
+
+                if(c == MARK) {
+                    count++;
+                }
+
+            }
+        }
+
+        return count;
+
+    }
 
 }
