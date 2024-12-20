@@ -3,10 +3,7 @@ package hagem.aoc2024.day19;
 import hagem.utils.Reader;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Day19 {
 
@@ -14,12 +11,12 @@ public class Day19 {
 
         int maxStyleLength;
         Set<String> styleSet;
-        Set<String> solutionSet;
+        Map<String, Long> solutionMap;
 
         public Style(String str) {
 
             this.styleSet = new HashSet<>();
-            this.solutionSet = new HashSet<>();
+            this.solutionMap = new HashMap<>();
 
             for(String s: str.split(", ")) {
 
@@ -29,16 +26,6 @@ public class Day19 {
 
                 this.styleSet.add(s);
             }
-
-        }
-
-        public void updateStyleSet(String s) {
-
-            if(s.length() > this.maxStyleLength) {
-                this.maxStyleLength = s.length();
-            }
-
-            this.styleSet.add(s);
 
         }
     }
@@ -51,44 +38,47 @@ public class Day19 {
 
         List<String> data = Reader.readFile(file);
 
-        int answerP1 = findValidTowels(data);
+        long answerP1 = findValidTowels(data, true);
+        long answerP2 = findValidTowels(data, false);
 
-        return "Part 1: " + answerP1;
+        return "Part 1: " + answerP1 + ", Part 2: " + answerP2;
     }
 
-    private int findValidTowels(List<String> data) {
+    private long findValidTowels(List<String> data, boolean isPart1) {
 
-        boolean b;
-        int count = 0;
+        long b;
+        long countP1 = 0;
+        long countP2 = 0;
+
+
         Style style = new Style( data.get(0) );
 
         for(int i = 2; i < data.size(); i++) {
 
             recursiveCount = 0;
             b = evaluateTowels(data.get(i), style);
-            if(b){
-                style.solutionSet.add(data.get(i));
-                count++;
-            }
-            System.out.println("Finished: " + data.get(i) + ": " + b);
+
+//            System.out.println("Finished: " + data.get(i) + ": " + b);
+
+            if(b > 0) countP1++;
+            countP2 += b;
         }
 
-        return count;
+        if(isPart1) return countP1;
+        return countP2;
     }
 
-    public boolean evaluateTowels(String s, Style style) {
-
-        if(recursiveCount++ > 10000) {
-            return false;
-        }
+    public long evaluateTowels(String s, Style style) {
 
         if(s.isEmpty()) {
-            return true;
+            return 1;
         }
 
-        if(style.solutionSet.contains(s)) {
-            return true;
+        if(style.solutionMap.containsKey(s)) {
+            return style.solutionMap.get(s);
         }
+
+        long count = 0;
 
 //        for(int x = 1; x <= Math.min(style.maxStyleLength, s.length()); x++) {
         for(int x = Math.min(style.maxStyleLength, s.length()); x > 0; x--) {
@@ -97,13 +87,13 @@ public class Day19 {
 
             if (style.styleSet.contains(sub)) {
 
-                if(evaluateTowels(s.substring(x), style)){
-                    return true;
-                }
+                count += evaluateTowels(s.substring(x), style);
+
             }
         }
 
-        return false;
+        style.solutionMap.put(s, count);
+        return count;
 
     }
 
